@@ -5,7 +5,8 @@ const app = getApp()
 Page({
   data: {
     username: '',
-    hideBtnLogin: true
+    hideBtnLogin: true,
+    qrMsg: ''
   },
   onLoad() {
     this.getUser()
@@ -34,8 +35,35 @@ Page({
   },
   scan() {
     wx.scanCode({
-      success (res) {
-        console.log(res)
+      success: (res) => {
+        console.log(res.result)
+        this.setData({
+          qrMsg: res.result,
+          hideBtnLogin: false
+        })
+      }
+    })
+  },
+  sendQRCodeMsg() {
+    wx.getStorage({
+      key: 'token',
+      success: (res) => {
+        const token = res.data
+        const array = this.data.qrMsg.split('QR:')
+        if (array.length > 1 && array[1] !== '') {
+          wx.request({
+            url: app.globalData.host + '/api/qr?msg=' + array[1],
+            method: 'GET',
+            header: {
+              'Authorization': 'Bearer ' + token
+            },
+            success: (res) => {
+              if(res.statusCode === 200 || res.statusCode === 201) {
+      
+              }
+            }
+          })
+        }
       }
     })
   },

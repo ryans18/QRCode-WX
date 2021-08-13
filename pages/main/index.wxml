@@ -7,6 +7,7 @@
     <button  type="primary"  bindtap="scan">扫码</button>
   </view>
   <view class="btn">
-    <button type="primary" plain="true" hidden="{{hideBtnLogin}}" >确认登录</button>
+    <button type="primary" plain="true" hidden="{{hideBtnLogin}}" bindtap="sendQRCodeMsg">确认登录</button>
   </view>
+  <view>{{qrMsg}}</view>
 </view>

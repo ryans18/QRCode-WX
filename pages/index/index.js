@@ -6,7 +6,8 @@ Page({
   data: {
     username: '',
     password: '',
-    disable: true
+    disable: true,
+    errMsg: ''
   },
   // 事件处理函数
   bindViewTap() {
@@ -34,13 +35,15 @@ Page({
   },
   bindUsername(e) {
     this.setData({
-      username: e.detail.value
+      username: e.detail.value,
+      errMsg: ''
     })
     this.vaildUser()
   },
   bindPassword(e) {
     this.setData({
-      password: e.detail.value
+      password: e.detail.value,
+      errMsg: ''
     })
     this.vaildUser()
   },
@@ -65,12 +68,21 @@ Page({
       header: {
         'content-type': 'application/json' // 默认值
       },
-      success (res) {
-        wx.setStorage({
-          key: "token",
-          data: res.data.id_token
-        })
-        wx.navigateTo({url: '/pages/main/index'})
+      success: (res) => {
+        if (res.statusCode === 200) {
+          wx.setStorage({
+            key: "token",
+            data: res.data.id_token
+          })
+          wx.navigateTo({url: '/pages/main/index'})
+        } else {
+          this.setData({
+            errMsg: '用户名或密码错误!'
+          })
+        }
+      },
+      fail: (err) => {
+        console.log(err)
       }
     })
   },
